@@ -6,11 +6,7 @@
 - Avec gestion simple des templates via Twig
 - Développer la couche de Repository
 
-### Models
-
-- Produits
-- Catégories
-- User
+### Entités
 
 Produits
 
@@ -19,8 +15,8 @@ Produits
 
 Users
 
-| id  | Nom     | #id_category | Ville | username | password | email |
-| --- |:-------:| ------------:| ----- | -------- | -------- | ----- |
+| id  | Nom     | Ville | username | password | email |
+| --- |:-------:| ----- | ----- | -------- | -------- |
 
 Catégories
 
@@ -39,14 +35,17 @@ Valeurs
 
 Commandes
 
-| id  | #id_user | 
-| --- | -------- |
+| id  | #id_user | date | 
+| --- | -------- | ---- |
 
 Commandes_Produits
 
-| id | #id_commande | #id_produit | qté |
-| -- | ------------ | ----------- | --- |
+| id | #id_commande | #id_produit | qte | prix |
+| -- | ------------ | ----------- | --- | ---- |
 
+Suggestions : 
+- Héritage Doctrine sur l'entité User : Entité Client (n° client, premium ou pas (booléen)) + Entité Employe (n° employe, date d'embauche)
+- Event Listeners / Subscribers : automatiser la création d'un slug dans un produit, lors de son insertion (event prePersist) ou bien mise à jour (event preUpdate)
 
 
 
