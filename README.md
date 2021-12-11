@@ -43,7 +43,7 @@ Commandes_Produits
 | id | #id_commande | #id_produit | qte | prix |
 | -- | ------------ | ----------- | --- | ---- |
 
-Suggestions : 
+Suggestions :
 - Héritage Doctrine sur l'entité User : Entité Client (n° client, premium ou pas (booléen)) + Entité Employe (n° employe, date d'embauche)
 - Event Listeners / Subscribers : automatiser la création d'un slug dans un produit, lors de son insertion (event prePersist) ou bien mise à jour (event preUpdate)
 

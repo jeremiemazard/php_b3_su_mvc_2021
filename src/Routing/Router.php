@@ -3,6 +3,7 @@
 namespace App\Routing;
 
 use App\Routing\Attribute\Route;
+use App\Utils\Filesystem;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -11,6 +12,8 @@ class Router
 {
   private $routes = [];
   private ContainerInterface $container;
+  private const CONTROLLERS_NAMESPACE = "App\\Controller\\";
+  private const CONTROLLERS_DIR = __DIR__ . "/../Controller";
 
   public function __construct(ContainerInterface $container)
   {
@@ -120,30 +123,38 @@ class Router
 
   public function registerRoutes(): void
   {
-    $files = array_slice(scandir(__DIR__ . '/../Controller'), 2);
-    $controllersNamespace = "App\\Controller\\";
+    $classNames = Filesystem::getClassNames(self::CONTROLLERS_DIR);
 
-    foreach ($files as $file) {
-      $fqcn = $controllersNamespace . pathinfo($file, PATHINFO_FILENAME);
-      $reflection = new ReflectionClass($fqcn);
+    foreach ($classNames as $class) {
+      $this->registerRoute($class);
+    }
+  }
 
-      $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+  public function registerRoute(string $className): void
+  {
+    $fqcn = self::CONTROLLERS_NAMESPACE . $className;
+    $reflection = new ReflectionClass($fqcn);
 
-      foreach ($methods as $method) {
-        $attributes = $method->getAttributes(Route::class);
+    if ($reflection->isAbstract()) {
+      return;
+    }
 
-        foreach ($attributes as $attribute) {
-          /** @var Route */
-          $route = $attribute->newInstance();
+    $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 
-          $this->addRoute(
-            $route->getName(),
-            $route->getPath(),
-            $route->getHttpMethod(),
-            $fqcn,
-            $method->getName()
-          );
-        }
+    foreach ($methods as $method) {
+      $attributes = $method->getAttributes(Route::class);
+
+      foreach ($attributes as $attribute) {
+        /** @var Route */
+        $route = $attribute->newInstance();
+
+        $this->addRoute(
+          $route->getName(),
+          $route->getPath(),
+          $route->getHttpMethod(),
+          $fqcn,
+          $method->getName()
+        );
       }
     }
   }

@@ -12,7 +12,6 @@ if (
 
 use App\Config\Connection;
 use App\Config\TwigEnvironment;
-use App\Controller\IndexController;
 use App\DependencyInjection\Container;
 use App\Routing\RouteNotFoundException;
 use App\Routing\Router;
