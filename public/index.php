@@ -12,17 +12,20 @@ if (
 
 use App\Config\Connection;
 use App\Config\TwigEnvironment;
+use App\Controller\IndexController;
 use App\DependencyInjection\Container;
 use App\Routing\RouteNotFoundException;
 use App\Routing\Router;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Dotenv\Dotenv;
 use Twig\Environment;
+use Symfony\Component\Console\Application;
 
 // Env vars - Possibilité d'utiliser le pattern Adapter
 // Pour pouvoir varier les dépendances qu'on utilise
 $dotenv = new Dotenv();
 $dotenv->loadEnv(__DIR__ . '/../.env');
+
 
 // BDD
 $connection = new Connection();
