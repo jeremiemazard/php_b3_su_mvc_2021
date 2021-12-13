@@ -9,6 +9,9 @@ use DateTime;
 
 /**
  * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"employee" = "Employee", "client" = "Client"})
  * @ORM\Table(name="users")
  */
 class User
@@ -18,42 +21,42 @@ class User
    * @ORM\Column(type="integer")
    * @ORM\GeneratedValue(strategy="AUTO")
    */
-  private int $id;
+  protected int $id;
 
   /**
    * @ORM\Column(type="string", length=255)
    */
-  private string $name;
+  protected string $name;
 
   /**
    * @ORM\Column(type="string", length=255)
    */
-  private string $firstName;
+  protected string $firstName;
 
   /**
    * @ORM\Column(type="string", length=255)
    */
-  private string $username;
+  protected string $username;
 
   /**
    * @ORM\Column(type="string", length=255)
    */
-  private string $password;
+  protected string $password;
 
   /**
    * @ORM\Column(type="string", length=255)
    */
-  private string $email;
+  protected string $email;
 
   /**
    * @ORM\Column(type="datetime", nullable=true)
    */
-  private DateTime $birthDate;
+  protected DateTime $birthDate;
 
   /**
    * @ORM\OneToMany(targetEntity=Order::class, mappedBy="client")
    */
-  private $orders;
+  protected $orders;
 
   public function __construct()
   {
