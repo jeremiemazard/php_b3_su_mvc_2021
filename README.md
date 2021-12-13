@@ -325,3 +325,82 @@ public function index(EntityManager $em)
   }
     
 `````
+
+On créé un controller pour seeder la DB lorsque l'uri "/generate" est visité plutôt que ce soit fait dans l'index :
+donc @BeatGrinder quand vous voudrez tester, il faudra d'abord générer la db.
+
+````php
+  #[Route(path: "/generate")]
+  public function index(EntityManager $em)
+  {
+      $cat = new Category();
+      $cat2 = new Category();
+
+    $cat->setName('categorie1')->setSlug('c1');
+    $cat2->setName('categorie2')->setSlug('c2');
+
+    $em->persist($cat);
+    $em->persist($cat2);
+    $em->flush();
+
+    for ($i=0; $i<10; $i++) {
+        $prod = new Product();
+        $prod->setName('produit')->setCategory($cat)->setSlug('prod')->setActive(1)->setBrand('apple')->setCreatedAt(new DateTime('1981-02-16'))->setPrice(200);
+
+        $em->persist($prod);
+        $em->flush();
+    }
+  }
+````
+On aurait voulu faire un formulaire comme montré plus haut mais pas le temps...
+
+L'idéal serait de créer un controller CRUD pour chaque Entité mais pas le temps...
+Donc on met tout en vrac dans le indexcontroller et on espère que le prof nous donnera quand même une bonne note :))
+
+
+Quand on visite /list, on récupère toutes les produits grace au Repository d'EntityManager de Twig et on les envoie dans le template product/product-list.html.twig en passant la variable en paramètre.
+
+````php
+  #[Route(path: "/list")]
+  public function productList(EntityManager $em)
+  {
+    $products = $em->getRepository(Product::class)->findAll();
+
+    dump($products);
+
+    if (!$products) {
+      echo 'Pas de produits';
+    }
+
+    echo $this->twig->render('product/product-list.html.twig', $products);
+  }
+````
+
+Dans product/product-list.html.twig
+
+On pourrait boucler sur 
+````html
+{% for product in products %}
+    <a href="{% /product . product.id %}">Lien du produit</a>
+{% endfor %}
+````
+Puis dans un ProductController
+
+````php
+#[Route(path: "/product/{id}")]
+public function productList(EntityManager $em)
+{
+
+    // recuperer l'ID dans une var $id
+    
+$product = $em->getRepository(Product::class)->find($id);
+
+if (!$product) {
+    // redirect to 404
+}
+
+echo $this->twig->render('product/product.html.twig', $product);
+}
+````
+TADAAAAAAA!
+

@@ -72,22 +72,6 @@ class Product
     /**
      * @return mixed
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getName()
     {
         return $this->name;
@@ -96,9 +80,10 @@ class Product
     /**
      * @param mixed $name
      */
-    public function setName($name): void
+    public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     public function getCategory(): ?Category
@@ -124,9 +109,10 @@ class Product
     /**
      * @param mixed $slug
      */
-    public function setSlug($slug): void
+    public function setSlug($slug)
     {
         $this->slug = $slug;
+        return $this;
     }
 
     /**
@@ -140,9 +126,10 @@ class Product
     /**
      * @param mixed $image
      */
-    public function setImage($image): void
+    public function setImage($image)
     {
         $this->image = $image;
+        return $this;
     }
 
     /**
@@ -156,9 +143,10 @@ class Product
     /**
      * @param mixed $reference
      */
-    public function setReference($reference): void
+    public function setReference($reference)
     {
         $this->reference = $reference;
+        return $this;
     }
 
     /**
@@ -172,9 +160,10 @@ class Product
     /**
      * @param mixed $created_at
      */
-    public function setCreatedAt($created_at): void
+    public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+        return $this;
     }
 
     /**
@@ -188,9 +177,10 @@ class Product
     /**
      * @param mixed $price
      */
-    public function setPrice($price): void
+    public function setPrice($price)
     {
         $this->price = $price;
+        return $this;
     }
 
     /**
@@ -204,9 +194,10 @@ class Product
     /**
      * @param mixed $brand
      */
-    public function setBrand($brand): void
+    public function setBrand($brand)
     {
         $this->brand = $brand;
+        return $this;
     }
 
     /**
@@ -220,9 +211,10 @@ class Product
     /**
      * @param mixed $active
      */
-    public function setActive($active): void
+    public function setActive($active)
     {
         $this->active = $active;
+        return $this;
     }
 
     /**

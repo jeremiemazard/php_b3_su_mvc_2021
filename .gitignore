@@ -4,3 +4,4 @@
 /var/
 /.phpunit.cache/
 /coverage/
+templates/.DS_Store
