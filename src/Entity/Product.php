@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,14 +30,14 @@ class Product
     protected $slug;
 
     /**
-     * @OneToOne(targetEntity="Category")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
      */
-    protected $categoryId;
+    private $category;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToMany(targetEntity=AttributeValue::class, inversedBy="products")
      */
-    protected $image;
+    private $values;
 
     /**
      * @ORM\Column(type="string", nullable=true, length=25)
@@ -61,6 +63,11 @@ class Product
      * @ORM\Column(type="boolean")
      */
     protected $active;
+
+    public function __construct()
+    {
+        $this->values = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -92,6 +99,18 @@ class Product
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
     }
 
     /**
@@ -204,6 +223,30 @@ class Product
     public function setActive($active): void
     {
         $this->active = $active;
+    }
+
+    /**
+     * @return Collection|AttributeValue[]
+     */
+    public function getValues(): Collection
+    {
+        return $this->values;
+    }
+
+    public function addValue(AttributeValue $value): self
+    {
+        if (!$this->values->contains($value)) {
+            $this->values[] = $value;
+        }
+
+        return $this;
+    }
+
+    public function removeValue(AttributeValue $value): self
+    {
+        $this->values->removeElement($value);
+
+        return $this;
     }
 
 

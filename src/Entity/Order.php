@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,61 +14,82 @@ class Order
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    protected $order_date;
+    private $order_date;
 
     /**
-     * @OneToOne(targetEntity="User")
-     * @JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $userId;
+    private $client;
 
     /**
-     * @return mixed
+     * @ORM\ManyToMany(targetEntity=Product::class)
      */
-    public function getId()
+    private $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOrderDate()
+    public function getOrderDate(): ?\DateTimeInterface
     {
         return $this->order_date;
     }
 
-    /**
-     * @param mixed $order_date
-     */
-    public function setOrderDate($order_date): void
+    public function setOrderDate(\DateTimeInterface $order_date): self
     {
         $this->order_date = $order_date;
+
+        return $this;
+    }
+
+    public function getClient(): ?User
+    {
+        return $this->client;
+    }
+
+    public function setClient(?User $client): self
+    {
+        $this->client = $client;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return Collection|Product[]
      */
-    public function getUserId()
+    public function getProducts(): Collection
     {
-        return $this->userid;
+        return $this->products;
     }
 
-    /**
-     * @param mixed $userId
-     */
-    public function setUser(User $userId): void
+    public function addProduct(Product $product): self
     {
-        $this->user = $userId;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+        }
+
+        return $this;
     }
 
+    public function removeProduct(Product $product): self
+    {
+        $this->products->removeElement($product);
 
+        return $this;
+    }
 }
