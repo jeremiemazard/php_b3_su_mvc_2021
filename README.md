@@ -299,7 +299,11 @@ On pourrait même imaginer avoir un formulaire avec un select qui récupère le 
 public function index(EntityManager $em)
 {
   $type = $_POST['type'];
-  $user = new $type();
+  
+  // on vérifie que la valeur entrée par le champs est bien conforme puisque l'utilisateur peut modifier la valeur envoyée. (le code n'est pas écrit)
+  // puis on instancie la classe $type() qui est soit Client soit Employee
+  
+  $user = new $type(); 
 
   // general user info
   $user->setName("Bob")
@@ -326,7 +330,7 @@ public function index(EntityManager $em)
     
 `````
 
-On créé un controller pour seeder la DB lorsque l'uri "/generate" est visité plutôt que ce soit fait dans l'index :
+On crée un controller pour seeder la DB lorsque l'uri "/generate" est visité plutôt que ce soit fait dans l'index :
 donc @BeatGrinder quand vous voudrez tester, il faudra d'abord générer la db.
 
 ````php
@@ -360,6 +364,8 @@ Donc on met tout en vrac dans le indexcontroller et on espère que le prof nous 
 
 Quand on visite /list, on récupère toutes les produits grace au Repository d'EntityManager de Twig et on les envoie dans le template product/product-list.html.twig en passant la variable en paramètre.
 
+#### Twig templating
+
 ````php
   #[Route(path: "/list")]
   public function productList(EntityManager $em)
@@ -375,13 +381,12 @@ Quand on visite /list, on récupère toutes les produits grace au Repository d'E
     echo $this->twig->render('product/product-list.html.twig', $products);
   }
 ````
-
 Dans product/product-list.html.twig
 
 On pourrait boucler sur 
 ````html
 {% for product in products %}
-    <a href="{% /product . product.id %}">Lien du produit</a>
+    <a href="{% 'product/' . product.id %}">Lien du produit</a>
 {% endfor %}
 ````
 Puis dans un ProductController
@@ -403,4 +408,15 @@ echo $this->twig->render('product/product.html.twig', $product);
 }
 ````
 TADAAAAAAA!
+
+## Conclusion du projet : 
+
+On a développé un système assez complexe d'Entités avec Doctrine en gérant les relations entre les entités et un type d'héritage pour notre entité User.
+On a également ajouté des fonctions dans IndexController qui ne sont pas propres du tout et qui sont à moitié finies (on est sincèrement désolé). Mais on a tout de même généré un mini seeder qui s'enclenche à chaque fois que l'on visite l'url 'generate'. On aurait pu intégrer une condition qui vérifie si la BDD a déjà eté seedé avant de performer le seed. On aurait également souhaité intégrer la [librairie Faker](https://github.com/fzaninotto/Faker) pour seeder avec des données presque réelles. 
+On regrette de ne pas avoir écrit toutes les Entités avec le Design Pattern Fluent pour les setters. Je l'ai fait sur quelques uns mais pas tous (et pas eu le temps de corriger ça).
+On aurait aimé développer la couche Repository pour récupérer certaines données uniquement ex: ..->isActive()->findAll() pour récupérer uniquement les produits qui sont actifs.
+Dans notre IndexController, on a géré le listing des produits. Il manque la mise en forme mais j'ai mis un bout de code qui montre comment on aurait pu faire [ici](#twig-templating) en envoyant les données avec la fonction render() de twig. En récupérant l'id (ou slug), on peut créer un lien pour chaque produit qui redirige vers la page de chaque produit, elle même controlée par une autre fonction dans IndexController. On pourrait également créer une fonction helper url() qui prendrait en paramètre le type ex: url(produit) et qui renverrait 'product/' plutôt que d'écrire directement 'product/' dans le <a></a>. 
+On regrette d'avoir trop complexifié notre base de données ce qui nous a fait perdre du temps en nous faisant répéter les choses plusieurs fois.
+
+Globalement, nous sommes satisfait du résultat, avec une Couche entité qui fonctionne très bien et qui peut enregistrer des données dans la DB et les récupérer avec le repository de base de Doctrine. 
 
